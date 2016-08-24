@@ -1,4 +1,3 @@
-et-sEat
 Hack for the HackGeorgeTown Hackathon
 Developers: Chris Blair, Nima Yahyazade, Nelson Lam, and David Gwizdala
 I worked on the backend comprised of MongoDB to store user information and node.js to interact with it
