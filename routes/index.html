@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+
+<html lang="eng">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="stylesheets/index.css">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100' rel='stylesheet' type='text/css'>
+  <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=	AIzaSyCwfsoG0g2T2SCpeC2RzpFKkHHZ5OVZP1s&callback=initMap">
+    </script>
+  <!--<script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>-->
+  <title>Let's Eat</title>
+</head>
+<body onload="initMap()">
+
+  <script>
+
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1272179896131180',
+        xfbml      : true,
+        cookie     : true,
+        version    : 'v2.5'
+      });
+    };
+
+    // Load the SDK asynchronously
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+      console.log('statusChangeCallback');
+      console.log(response);
+      // The response object is returned with a status field that lets the
+      // app know the current login status of the person.
+      // Full docs on the response object can be found in the documentation
+      // for FB.getLoginStatus().
+      if (response.status === 'connected') {
+        // Logged into your app and Facebook.
+        testAPI();
+      } else if (response.status === 'not_authorized') {
+        // The person is logged into Facebook, but not your app.
+        document.getElementById('status').innerHTML = 'Please log ' +
+          'into this app.';
+      } else {
+        // The person is not logged into Facebook, so we're not sure if
+        // they are logged into this app or not.
+        document.getElementById('status').innerHTML = 'Please log ' +
+          'into Facebook.';
+      }
+    }
+
+    // This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState() {
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+    }
+
+
+    // Now that we've initialized the JavaScript SDK, we call
+    // FB.getLoginStatus().  This function gets the state of the
+    // person visiting this page and can return one of three states to
+    // the callback you provide.  They can be:
+    //
+    // 1. Logged into your app ('connected')
+    // 2. Logged into Facebook, but not your app ('not_authorized')
+    // 3. Not logged into Facebook and can't tell if they are logged into
+    //    your app or not.
+    //
+    // These three cases are handled in the callback function.
+
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+
+
+    var UID;
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function testAPI() {
+      console.log('Welcome!  Fetching your information.... ');
+      FB.api('/me', function(response) {
+        console.log('Successful login for: ' + response.name);
+        document.getElementById('status').innerHTML =
+          'Thanks for logging in, ' + response.name + '!';      });
+
+      document.getElementById("groupButton").onclick=function getFriends() {
+          FB.api(
+            "/me/friends",
+          function (response) {
+            if (response && !response.error) {
+                if (response.hasOwnProperty('data')) {
+                  for(value in response['data'])
+                  {
+                  console.log("id = " + response['data'][value].id + " name+ " + response['data'][value].name);   
+                  }
+                  saveUserData(response['data']);
+                  var groupButton = document.getElementById('groupButton');
+                  groupButton.addEventListener("click", function(){
+                    sessionStorage.setItem('data', response['data']);
+                    window.Location= "group_selection.html";
+                  });
+                }
+              }
+
+            else {
+              alert("Can't Get Friends List! Are you logged in?");
+            }
+          }
+        );
+      }
+    }
+  </script>
+
+  <!--
+    Below we include the Login Button social plugin. This button uses
+    the JavaScript SDK to present a graphical Login button that triggers
+    the FB.login() function when clicked.
+  -->
+
+  <fb:login-button id="fblogin" scope="public_profile,email, user_friends" onlogin="checkLoginState();">
+  </fb:login-button>
+
+  <div id="status">
+  </div>
+  <div id="googlemaps">
+  </div>
+
+   <div id="info">
+    <table align="center" style="border-spacing: 10px;">
+        <tr>
+          <td colspan="3">
+            <h1 align="center" style="font-family: 'Roboto', sans-serif, thin;">Let's Eat</h1>
+          </td>
+        </tr>
+        <tr>
+          <td class="round-button">
+          <a href="#" id="groupButton" class="round-button">
+              <img src="images/create_group.svg" alt="Create Group" />
+            </a>
+          </td>
+
+          <td class="round-button">
+            <a href="/group_selection.html" class="round-button">
+                <img src="/images/join_group.svg" alt="Join Group" />
+              </a>
+          </td>
+
+          <td class="round-button">
+            <a href="/results.html" class="round-button">
+                <img src="/images/find_group.svg" alt="Find Group" />
+              </a>
+          </td>
+        </tr>
+    </table>
+  </div>
+
+<script type="text/javascript">
+
+function initMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendLocation);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+function sendLocation(position) {
+
+    var myOptions = {
+        zoom: 17,
+        streetViewControl: false,
+        scaleControl: false,
+        mapTypeControl: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    map = new google.maps.Map(document.getElementById('googlemaps'),
+        myOptions);
+
+
+    latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    map.setCenter(latLng);
+
+    var image = 'images/marker.png';
+    marker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        icon: image,
+        draggable: false,
+        animation: google.maps.Animation.DROP
+    });
+
+
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<script type="text/javascript">
+function saveUserData(data1) {
+var http = new XMLHttpRequest();
+var url = 'http://159.203.88.72:3000/saveuserdata';
+
+http.open("post", url, true);
+http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+http.send(JSON.stringify(data1));
+
+}
+
+
+
+</script>
+
+</body>
+</html>

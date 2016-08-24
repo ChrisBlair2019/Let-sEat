@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="eng">
+<head>
+  <meta charset="utf-8">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100' rel='stylesheet' type='text/css'>
+  <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=	AIzaSyCwfsoG0g2T2SCpeC2RzpFKkHHZ5OVZP1s&callback=initMap">
+    </script>
+  <title>Let's Eat - Results</title>
+  <style type="text/css">
+  html, body { height: 100%; margin: 0; padding: 0; }
+  #map { height: 100%; }
+</style>
+</head>
+<body>
+    <div id="map"></div>
+
+<script type="text/javascript">
+
+function initMap() {
+  navigator.geolocation.getCurrentPosition(calcLocation);
+}
+
+function calcLocation(position) {
+  var map;
+  var polygon;
+  var bounds = new google.maps.LatLngBounds();
+  var i;
+  var myLatLng = new google.maps.LatLng(52.5,6.6);
+
+  var polygonCoords = [
+    new google.maps.LatLng(38.9162093,-77.0775715),
+    new google.maps.LatLng(38.9093622,-77.0708067),
+    new google.maps.LatLng(38.908319, -77.077609),
+    new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+      ];
+
+  for (i = 0; i < polygonCoords.length; i++) {
+     bounds.extend(polygonCoords[i]);
+  }
+
+  // The Center of the polygon
+  var latlng = bounds.getCenter();
+
+  var myOptions = {
+    zoom: 15,
+    center: latlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  map = new google.maps.Map(document.getElementById("map"),
+      myOptions);
+
+    polygon = new google.maps.Polygon({
+       paths: polygonCoords,
+       strokeColor: "#FF0000",
+       strokeOpacity: 0.8,
+       strokeWeight: 3,
+       fillColor: "#FF0000",
+       fillOpacity: 0.05
+     });
+     polygon.setMap(map);
+
+  var image = 'images/marker.png';
+  var marker = new google.maps.Marker({
+    position: latlng,
+    map: map,
+    icon: image,
+    title: 'Hello World!'
+  });
+}
+</script>
+
+</body>
+</html>
