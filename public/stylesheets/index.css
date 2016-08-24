@@ -1,0 +1,45 @@
+html,body,#wrapper{
+    width:100%;
+}
+
+#googlemaps {
+        height: 100%;
+        width: 100%;
+        position:absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        opacity: .75;
+  }
+#info {
+    position: relative;
+    top: 50%;
+    transform: translateY(150%);
+    z-index: 1;
+    height: auto;
+    margin: auto;
+    background-color: #fff;
+    background-color: rgba(255,255,255,0.5);
+}
+
+.round-button {
+    width: 10vw;
+    height: 10vw;
+    border-radius: 50%;
+    overflow: auto;
+    background: #9d9d9;
+    box-shadow: 0 0 3px gray;
+}
+.round-button:hover {
+    background: #262626;
+}
+.round-button img {
+    display: block;
+    width: 10vw;
+    height: 10vw;
+}
+#fblogin{
+    width: 10vw;
+    z-index: 1;
+    position: absolute;
+}
