@@ -10,3 +10,5 @@ preference checking and dietary restriction using the yelp api. From this a rest
 will be picked that is as equidistant from all people as possible, if no restaurant is selected then the circle will grow larger 
 and will dynamically filtered preferences only, whilst keeping dietary restrictions until a restaurant list is found with the first 
 being the closetest and fits as many preferences as possible.
+
+http://devpost.com/software/let-s-eat
